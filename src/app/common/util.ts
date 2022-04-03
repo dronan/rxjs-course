@@ -2,7 +2,11 @@ import { Observable } from "rxjs";
 
 export function createHttpObservable (url: string) {
   return new Observable( observer => {
-    fetch(url).then( response => {
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    fetch(url, {signal}).then( response => {
       return response.json();
     })
     .then ( body => {
@@ -13,5 +17,10 @@ export function createHttpObservable (url: string) {
       observer.error(err)
     })
     // observer.complete();
+
+    return () => {
+      controller.abort();
+    };
+
   })
 }
