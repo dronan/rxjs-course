@@ -41,7 +41,8 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
         this.form.valueChanges.pipe( 
             filter( () => this.form.valid ),
-            concatMap( changes => this.saveCourse(changes) ) // croa um observable e faz o subscribe nele concatenando o resultado, executando o proximo sempre apois a execucao do anterior... ou seja, só salva depois que o save anterior foi concluido
+            concatMap( changes => this.saveCourse(changes) ) // executa o proximo depois de concluir o anterior
+            // mergeMap( changes => this.saveCourse(changes) ) // executa todos juntos em paralelo
         )
         .subscribe()
 
