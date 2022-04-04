@@ -7,6 +7,9 @@ export function createHttpObservable (url: string) {
     const signal = controller.signal;
 
     fetch(url, {signal}).then( response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
       return response.json();
     })
     .then ( body => {
