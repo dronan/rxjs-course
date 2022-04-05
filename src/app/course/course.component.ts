@@ -49,21 +49,18 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
-        const searchLessons$ = fromEvent(this.input.nativeElement, 'keyup')
-            .pipe(
-                map((event: any) => event.target.value),
-                debounceTime(500),
-                distinctUntilChanged(),
-                switchMap(search => this.loadLessons(search))
-            )
-        const initialLesson$ = this.loadLessons();
-
-        this.lessons$ = merge(searchLessons$, initialLesson$);
+        this.lessons$ = fromEvent(this.input.nativeElement, 'keyup')
+        .pipe(
+            map((event: any) => event.target.value),
+            startWith(''),
+            debounceTime(500),
+            distinctUntilChanged(),
+            switchMap(search => this.loadLessons(search))
+        )
 
     }
 
     loadLessons(search=''): Observable<Lesson[]> {
-        console.log(`aqui`)
         return createHttpObservable(`/api/lessons?courseId=${this.courseId}&pageSize=100&filter=${search}`)
         .pipe(
             map(res => res['payload'])
