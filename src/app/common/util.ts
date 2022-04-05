@@ -8,7 +8,8 @@ export function createHttpObservable (url: string) {
 
     fetch(url, {signal}).then( response => {
       if (!response.ok) {
-        throw new Error(response.statusText);
+        observer.error('request failed'+ response.status)
+        //throw new Error(response.statusText);
       }
       return response.json();
     })
@@ -21,9 +22,8 @@ export function createHttpObservable (url: string) {
     })
     // observer.complete();
 
-    return () => {
-      controller.abort();
-    };
+    return () => controller.abort();
+    
 
   })
 }
