@@ -25,7 +25,6 @@ export class HomeComponent implements OnInit {
         
         const courses$: Observable<Course[]> = http$.pipe(
             map( res => res['payload'] ),
-            tap( (oi) => console.log('post map execution', oi)),
             shareReplay(),
             retryWhen( (errors) => errors.pipe( delayWhen( () => timer(2000) ) ) )
 
