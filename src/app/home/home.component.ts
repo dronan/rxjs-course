@@ -24,20 +24,8 @@ export class HomeComponent implements OnInit {
         const courses$ = this.store.courses$;
 
         this.beginnerCourses$ = this.store.selectBeginnerCourses();
-        
-        courses$
-            .pipe(
-                map(courses => courses
-                    .filter(course => course.category == 'BEGINNER'))
-            );
 
         this.advancedCourses$ = this.store.selectAdvancedCourses();
-        
-        courses$
-            .pipe(
-                map(courses => courses
-                    .filter(course => course.category == 'ADVANCED'))
-            );
 
     }
 
