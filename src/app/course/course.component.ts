@@ -32,9 +32,10 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
     lessons$: Observable<Lesson[]>;
 
+    course: Course;
 
     @ViewChild('searchInput', { static: true }) input: ElementRef;
-
+    
     constructor(private route: ActivatedRoute, private store: Store) {
 
 
@@ -44,14 +45,17 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
         this.courseId = this.route.snapshot.params['id'];
 
-        this.course$ = this.store.selectCourseById(this.courseId)
-                                .pipe(
-                                    //first() // força a finalização da observable depois do primeiro valor recuperado
-                                    take(1) // ao contrario do first, o take vc define quantos valores vc deseja recuperar
-                                )
-        forkJoin(
-            this.course$,  this.loadLessons()
-        ).subscribe(console.log)
+        this.course$ = this.store.selectCourseById(this.courseId);
+
+        this.course$.subscribe( course => this.course = course );
+        
+        this.loadLessons()
+            .pipe(
+                withLatestFrom(this.course$)
+            )
+            .subscribe(([lesson, course]) => {
+                console.log(lesson, course)
+            })
     
 
     }
